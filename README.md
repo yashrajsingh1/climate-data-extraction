@@ -6,6 +6,14 @@ A production-grade automated system for discovering, downloading, and extracting
 ![Flask](https://img.shields.io/badge/Flask-3.0+-green.svg)
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg)
 
+## Project Highlights
+
+- End-to-end ESG pipeline: discovery, download, extraction, and structured output
+- Dual interface support: production-ready Flask dashboard and CLI workflows
+- Designed for scale: batch processing for S&P 500-style company lists
+- Hybrid extraction approach: deterministic rules with optional LLM fallback
+- CI-enabled repository with test automation via GitHub Actions
+
 ## Overview
 
 This system automatically:
