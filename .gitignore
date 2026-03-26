@@ -1,0 +1,68 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment variables
+.env
+.env.local
+
+# Database & Data files
+*.db
+*.sqlite
+*.sqlite3
+data/reports/*
+!data/reports/.gitkeep
+data/*.db
+data/*.sqlite
+
+# Logs
+logs/
+*.log
+
+# Test outputs
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Downloaded PDFs (large files)
+*.pdf
+
+# Screenshots from tests
+browser_test.png
+*.png
+*.jpg
+
+# Node modules (if any)
+node_modules/
+
+# Build outputs
+build/
+dist/
+*.egg-info/
+
+# Playwright
+playwright/.cache/
+
+# Development metadata
+.claude/

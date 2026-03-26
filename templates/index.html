@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClimateExtract - Sustainability Data Extraction</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --primary-dark: #4f46e5;
+            --accent: #22d3ee;
+            --accent-green: #10b981;
+            --accent-orange: #f97316;
+            --accent-pink: #ec4899;
+            --bg-primary: #030712;
+            --bg-secondary: #0a0f1e;
+            --bg-card: linear-gradient(145deg, #0f172a 0%, #1e1b4b 100%);
+            --bg-card-hover: linear-gradient(145deg, #1e293b 0%, #312e81 100%);
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --glow-primary: 0 0 60px rgba(99, 102, 241, 0.3);
+            --glow-accent: 0 0 40px rgba(34, 211, 238, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(34, 211, 238, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(236, 72, 153, 0.05) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 16px 0;
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .navbar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--primary-light), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: var(--glow-primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 4px;
+            background: var(--glass);
+            padding: 4px;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .nav-link {
+            padding: 10px 20px;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: var(--glow-primary);
+        }
+
+        /* Hero */
+        .hero {
+            text-align: center;
+            padding: 60px 24px 40px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #fff 0%, var(--text-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, var(--primary-light), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .hero h1 { font-size: 2rem; }
+        }
+
+        .stat-card {
+            position: relative;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 24px;
+            text-align: center;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+        }
+
+        .stat-card:nth-child(2)::before { background: linear-gradient(90deg, transparent, var(--accent), transparent); }
+        .stat-card:nth-child(3)::before { background: linear-gradient(90deg, transparent, var(--accent-green), transparent); }
+        .stat-card:nth-child(4)::before { background: linear-gradient(90deg, transparent, var(--accent-orange), transparent); }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+            box-shadow: var(--glow-primary);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-light), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-card:nth-child(2) .stat-value {
+            background: linear-gradient(135deg, var(--accent), #06b6d4);
+            -webkit-background-clip: text;
+        }
+
+        .stat-card:nth-child(3) .stat-value {
+            background: linear-gradient(135deg, var(--accent-green), #34d399);
+            -webkit-background-clip: text;
+        }
+
+        .stat-card:nth-child(4) .stat-value {
+            background: linear-gradient(135deg, var(--accent-orange), #fb923c);
+            -webkit-background-clip: text;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        /* Main Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        @media (max-width: 1024px) {
+            .main-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(99, 102, 241, 0.3);
+            box-shadow: var(--glow-primary);
+        }
+
+        .card-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
+        }
+
+        .card-icon.green {
+            background: linear-gradient(135deg, var(--accent-green), #059669);
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+        }
+
+        .card-icon.cyan {
+            background: linear-gradient(135deg, var(--accent), #0891b2);
+            box-shadow: 0 8px 24px rgba(34, 211, 238, 0.3);
+        }
+
+        .card-icon.orange {
+            background: linear-gradient(135deg, var(--accent-orange), #ea580c);
+            box-shadow: 0 8px 24px rgba(249, 115, 22, 0.3);
+        }
+
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+        }
+
+        .card-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .card-body {
+            padding: 24px;
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 16px 28px;
+            border: none;
+            border-radius: 14px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.35);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.5);
+        }
+
+        .btn-secondary {
+            background: var(--glass);
+            color: var(--text-primary);
+            border: 1px solid var(--glass-border);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--primary);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--accent-green), #059669);
+            color: white;
+            box-shadow: 0 8px 32px rgba(16, 185, 129, 0.35);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-group .btn { flex: 1; }
+
+        /* Company List */
+        .company-list {
+            max-height: 340px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        .company-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .company-item:hover {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .company-info {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .company-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+            color: white;
+        }
+
+        .company-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .company-btn {
+            padding: 8px 16px;
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--primary-light);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .company-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Progress */
+        .progress-container {
+            margin-top: 24px;
+            display: none;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            width: 0%;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+        }
+
+        .progress-text {
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Table */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        th {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        td {
+            font-size: 0.875rem;
+        }
+
+        tr:hover {
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .status-success {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent-green);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .status-failed {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        /* Files */
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            margin-bottom: 10px;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .file-item:hover {
+            border-color: var(--glass-border);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .file-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 0.7rem;
+        }
+
+        .file-name {
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .file-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .download-btn {
+            padding: 10px 18px;
+            background: var(--glass);
+            color: var(--text-primary);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .download-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 24px;
+            color: var(--text-muted);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 16px;
+            opacity: 0.3;
+        }
+
+        /* Spinner */
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 18px 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+        }
+
+        .toast.success { border-color: var(--accent-green); }
+        .toast.error { border-color: #ef4444; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--glass-border);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 24px;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            border-top: 1px solid var(--glass-border);
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="logo">
+                <div class="logo-icon">🌍</div>
+                ClimateExtract
+            </div>
+            <div class="nav-links">
+                <a href="#" class="nav-link active">Dashboard</a>
+                <a href="#results" class="nav-link">Results</a>
+                <a href="#files" class="nav-link">Downloads</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Hero -->
+        <div class="hero">
+            <h1>Climate Data <span>Extraction</span></h1>
+            <p>Automatically discover, download, and extract emissions data from company sustainability reports with one click</p>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="statCompanies">0</div>
+                <div class="stat-label">Companies Processed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="statPdfs">0</div>
+                <div class="stat-label">PDFs Downloaded</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="statSize">0 MB</div>
+                <div class="stat-label">Total Data</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="statEmissions">0</div>
+                <div class="stat-label">Emissions Records</div>
+            </div>
+        </div>
+
+        <!-- Main Grid -->
+        <div class="main-grid">
+            <!-- Single Company -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🔍</div>
+                    <div>
+                        <div class="card-title">Single Company</div>
+                        <div class="card-subtitle">Extract data from one company</div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label class="form-label">Company Name</label>
+                        <input type="text" class="form-input" id="companyName" placeholder="Enter company name (e.g., Tesla)">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Website (Optional)</label>
+                        <input type="text" class="form-input" id="companyWebsite" placeholder="https://company.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Max Reports</label>
+                        <select class="form-input" id="maxReports">
+                            <option value="2">2 Reports</option>
+                            <option value="3" selected>3 Reports</option>
+                            <option value="5">5 Reports</option>
+                            <option value="10">10 Reports</option>
+                        </select>
+                    </div>
+
+                    <button class="btn btn-primary" id="btnExtract" onclick="extractSingle()">
+                        <span>🚀</span> Start Extraction
+                    </button>
+
+                    <div class="progress-container" id="singleProgress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="singleProgressFill"></div>
+                        </div>
+                        <div class="progress-text" id="singleProgressText">Processing...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Batch -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon green">🏢</div>
+                    <div>
+                        <div class="card-title">Batch Extraction</div>
+                        <div class="card-subtitle">Process multiple companies at once</div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="btn-group" style="margin-bottom: 20px;">
+                        <button class="btn btn-primary" id="btnBatch10" onclick="extractBatch(10)">
+                            Extract Top 10
+                        </button>
+                        <button class="btn btn-secondary" id="btnBatch50" onclick="extractBatch(50)">
+                            Extract All 50
+                        </button>
+                    </div>
+
+                    <div class="progress-container" id="batchProgress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="batchProgressFill"></div>
+                        </div>
+                        <div class="progress-text" id="batchProgressText">Starting...</div>
+                    </div>
+
+                    <div class="company-list" id="companyList">
+                        {% for company in companies %}
+                        <div class="company-item">
+                            <div class="company-info">
+                                <div class="company-avatar">{{ company.name[:2].upper() }}</div>
+                                <span class="company-name">{{ company.name }}</span>
+                            </div>
+                            <button class="company-btn" onclick="extractCompany('{{ company.name }}', '{{ company.website }}')">
+                                Extract
+                            </button>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div class="card" id="results" style="margin-bottom: 24px;">
+            <div class="card-header">
+                <div class="card-icon cyan">📊</div>
+                <div>
+                    <div class="card-title">Extraction Results</div>
+                    <div class="card-subtitle">View extracted emissions data</div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Company</th>
+                                <th>Year</th>
+                                <th>PDFs</th>
+                                <th>Scope 1</th>
+                                <th>Scope 2</th>
+                                <th>Scope 3</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsBody">
+                            <tr>
+                                <td colspan="7">
+                                    <div class="empty-state">
+                                        <div class="empty-state-icon">📋</div>
+                                        <p>No extractions yet. Start by extracting a company above.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Files -->
+        <div class="card" id="files">
+            <div class="card-header">
+                <div class="card-icon orange">📁</div>
+                <div>
+                    <div class="card-title">Downloaded Reports</div>
+                    <div class="card-subtitle">All sustainability PDFs</div>
+                </div>
+            </div>
+            <div class="card-body" id="filesList">
+                <div class="empty-state">
+                    <div class="empty-state-icon">📄</div>
+                    <p>No files downloaded yet.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>ClimateExtract v2.0 — Automated Sustainability Data Extraction</p>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <span id="toastIcon">✓</span>
+        <span id="toastMessage"></span>
+    </div>
+
+    <script>
+        let stats = { companies: 0, pdfs: 0, size: 0, emissions: 0 };
+        let hasResults = false;
+
+        document.addEventListener('DOMContentLoaded', loadReports);
+
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            toast.className = 'toast ' + (isError ? 'error' : 'success');
+            document.getElementById('toastIcon').textContent = isError ? '✕' : '✓';
+            document.getElementById('toastMessage').textContent = message;
+            toast.style.display = 'flex';
+            setTimeout(() => toast.style.display = 'none', 4000);
+        }
+
+        function updateStats() {
+            document.getElementById('statCompanies').textContent = stats.companies;
+            document.getElementById('statPdfs').textContent = stats.pdfs;
+            document.getElementById('statSize').textContent = stats.size.toFixed(1) + ' MB';
+            document.getElementById('statEmissions').textContent = stats.emissions;
+        }
+
+        async function extractSingle() {
+            const name = document.getElementById('companyName').value.trim();
+            const website = document.getElementById('companyWebsite').value.trim();
+            const maxReports = document.getElementById('maxReports').value;
+
+            if (!name) { showToast('Please enter a company name', true); return; }
+
+            const btn = document.getElementById('btnExtract');
+            const progress = document.getElementById('singleProgress');
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> Extracting...';
+            progress.style.display = 'block';
+            document.getElementById('singleProgressFill').style.width = '30%';
+            document.getElementById('singleProgressText').textContent = 'Discovering PDFs...';
+
+            try {
+                const response = await fetch('/api/extract', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ company: name, website, max_reports: parseInt(maxReports) })
+                });
+
+                document.getElementById('singleProgressFill').style.width = '100%';
+                document.getElementById('singleProgressText').textContent = 'Complete!';
+
+                const result = await response.json();
+                addResult(result);
+
+                stats.companies++;
+                stats.pdfs += result.reports_downloaded || 0;
+                stats.emissions += result.emissions_data?.length || 0;
+                updateStats();
+                loadReports();
+
+                showToast(`Extracted ${result.reports_downloaded} PDFs for ${name}`);
+            } catch (error) {
+                showToast('Extraction failed: ' + error.message, true);
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = '<span>🚀</span> Start Extraction';
+            setTimeout(() => progress.style.display = 'none', 2000);
+        }
+
+        function extractCompany(name, website) {
+            document.getElementById('companyName').value = name;
+            document.getElementById('companyWebsite').value = website || '';
+            extractSingle();
+        }
+
+        async function extractBatch(count) {
+            const btn10 = document.getElementById('btnBatch10');
+            const btn50 = document.getElementById('btnBatch50');
+            const progress = document.getElementById('batchProgress');
+
+            btn10.disabled = btn50.disabled = true;
+            btn10.innerHTML = '<span class="spinner"></span> Running...';
+            progress.style.display = 'block';
+
+            try {
+                const res = await fetch('/api/companies');
+                const companies = await res.json();
+
+                await fetch('/api/extract-batch', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ companies: companies.slice(0, count), max_reports: 2 })
+                });
+
+                pollBatchStatus();
+            } catch (error) {
+                showToast('Batch extraction failed', true);
+                btn10.disabled = btn50.disabled = false;
+                btn10.innerHTML = 'Extract Top 10';
+                progress.style.display = 'none';
+            }
+        }
+
+        async function pollBatchStatus() {
+            const btn10 = document.getElementById('btnBatch10');
+            const btn50 = document.getElementById('btnBatch50');
+
+            const interval = setInterval(async () => {
+                try {
+                    const res = await fetch('/api/status');
+                    const status = await res.json();
+
+                    const pct = status.total > 0 ? (status.progress / status.total) * 100 : 0;
+                    document.getElementById('batchProgressFill').style.width = pct + '%';
+
+                    if (status.running) {
+                        document.getElementById('batchProgressText').textContent =
+                            `Processing ${status.current_company}... (${status.progress}/${status.total})`;
+                    } else {
+                        clearInterval(interval);
+                        document.getElementById('batchProgressFill').style.width = '100%';
+                        document.getElementById('batchProgressText').textContent = 'Complete!';
+
+                        status.results?.forEach(r => {
+                            addResult(r);
+                            stats.companies++;
+                            stats.pdfs += r.reports_downloaded || 0;
+                            stats.emissions += r.emissions_data?.length || 0;
+                        });
+                        updateStats();
+                        loadReports();
+
+                        btn10.disabled = btn50.disabled = false;
+                        btn10.innerHTML = 'Extract Top 10';
+                        showToast(`Batch complete! ${status.results?.length || 0} companies processed`);
+                    }
+                } catch (e) { clearInterval(interval); }
+            }, 2000);
+        }
+
+        function addResult(result) {
+            const tbody = document.getElementById('resultsBody');
+            if (!hasResults) { tbody.innerHTML = ''; hasResults = true; }
+
+            const emissions = result.emissions_data?.[0] || {};
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td><strong>${result.company || 'Unknown'}</strong></td>
+                <td>${emissions.year || '-'}</td>
+                <td>${result.reports_downloaded || 0}</td>
+                <td>${emissions.scope_1 ? Number(emissions.scope_1).toLocaleString() : '-'}</td>
+                <td>${emissions.scope_2_location ? Number(emissions.scope_2_location).toLocaleString() : '-'}</td>
+                <td>${emissions.scope_3 ? Number(emissions.scope_3).toLocaleString() : '-'}</td>
+                <td><span class="status-badge ${result.status === 'success' ? 'status-success' : 'status-failed'}">${result.status || 'unknown'}</span></td>
+            `;
+            tbody.insertBefore(row, tbody.firstChild);
+        }
+
+        async function loadReports() {
+            try {
+                const res = await fetch('/api/reports');
+                const reports = await res.json();
+                const container = document.getElementById('filesList');
+
+                if (!reports.length) {
+                    container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📄</div><p>No files downloaded yet.</p></div>`;
+                    return;
+                }
+
+                let totalSize = 0;
+                let html = '';
+
+                reports.forEach(r => {
+                    totalSize += r.size_mb;
+                    html += `
+                        <div class="file-item">
+                            <div class="file-info">
+                                <div class="file-icon">PDF</div>
+                                <div>
+                                    <div class="file-name">${r.filename}</div>
+                                    <div class="file-meta">${r.company} • ${r.size_mb} MB</div>
+                                </div>
+                            </div>
+                            <a href="/api/download/${r.company}/${r.filename}" class="download-btn">Download</a>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = html;
+                stats.size = totalSize;
+                stats.pdfs = reports.length;
+                updateStats();
+            } catch (e) { console.error('Failed to load reports:', e); }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+# Climate Data Extraction System - Requirements
+
+# Core
+pydantic>=2.0.0
+pydantic-settings>=2.0.0
+sqlalchemy>=2.0.0
+python-dotenv>=1.0.0
+
+# Web Interface
+flask>=3.0.0
+
+# PDF Processing
+PyMuPDF>=1.23.0
+
+# Web Discovery
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+fake-useragent>=1.4.0
+
+# Playwright (for JavaScript websites)
+playwright>=1.40.0
+
+# LLM (optional - for enhanced extraction)
+openai>=1.0.0
+
+# Testing
+pytest>=7.4.0
